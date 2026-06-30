@@ -28,6 +28,7 @@ nastyushik-math-skill-stack/
 ├── docs/day-notes.md                  # краткая история итераций
 ├── docs/skill-gates.md                # критерии: когда навык считать закреплённым
 ├── docs/parent-review-checklist.md    # чек-лист для проверки тетради
+├── docs/artifact-storage.md           # Git LFS storage and integrity notes
 ├── prompts/next-day-template.md       # шаблон запроса для следующего дня
 ├── scripts/validate_matrix.py         # простая проверка CSV
 └── .github/workflows/validate.yml     # CI-проверка матрицы
@@ -46,10 +47,18 @@ nastyushik-math-skill-stack/
 python3 scripts/validate_matrix.py
 ```
 
-## Рекомендуемое имя GitHub-репозитория
+## Artifact archive
+
+Полный архив артефактов сессии предполагается хранить через Git LFS:
 
 ```text
-aloschilov/nastyushik-math-skill-stack
+artifacts/nastyushik_repo_artifacts_full.zip
 ```
 
-Рекомендуемая видимость: **private**.
+SHA-256 полного архива:
+
+```text
+56bca25bd89dec8ced6d3d74b70c82269e0b03f3c5bdb3dc7a25ca948736e488
+```
+
+См. `docs/artifact-storage.md`.
