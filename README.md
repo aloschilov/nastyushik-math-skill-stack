@@ -50,6 +50,8 @@ Dashboard публикуется из `docs/index.html`:
 https://aloschilov.github.io/nastyushik-math-skill-stack/
 ```
 
+Публикация выполняется автоматически workflow `.github/workflows/pages.yml` при каждом push в `master` (а также вручную через `workflow_dispatch`). GitHub Pages доступен, потому что репозиторий публичный — на free plan Pages не поддерживается для приватных репозиториев.
+
 Страница собирается командой:
 
 ```bash
