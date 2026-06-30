@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>Nastyushik Math Skill Stack</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f8fb;
+      --panel: #ffffff;
+      --ink: #1c2331;
+      --muted: #667085;
+      --line: #d9dee8;
+      --blue: #2563eb;
+      --green: #14804a;
+      --amber: #b76e00;
+      --red: #bd2b2b;
+      --violet: #6d4aff;
+      --shadow: 0 10px 30px rgba(18, 28, 45, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      white-space: normal;
+    }
+    header {
+      padding: 28px 28px 18px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--line);
+    }
+    .wrap { max-width: 1320px; margin: 0 auto; }
+    .topline {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+    .subtitle { max-width: 820px; margin: 12px 0 0; color: var(--muted); }
+    .quick-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      max-width: 620px;
+    }
+    .quick-links a,
+    .link-cluster a,
+    .day-links a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: #26364f;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+    main { padding: 22px 28px 42px; }
+    section { margin: 0 auto 24px; max-width: 1320px; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(130px, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .stat {
+      min-height: 92px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .stat strong { display: block; font-size: 28px; line-height: 1; }
+    .stat span { display: block; margin-top: 8px; font-weight: 650; }
+    .stat small { color: var(--muted); }
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .toolbar h2, section h2 { margin: 0; font-size: 22px; letter-spacing: 0; }
+    .filters { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .filters input {
+      width: min(360px, 82vw);
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0 10px;
+      font: inherit;
+      background: #fff;
+    }
+    .filters button {
+      height: 38px;
+      padding: 0 11px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      cursor: pointer;
+    }
+    .filters button.active { border-color: var(--blue); color: var(--blue); }
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    table { width: 100%; border-collapse: collapse; min-width: 1050px; }
+    th, td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+    thead th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #f1f4f9;
+      color: #344054;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+    tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+    tbody th { width: 250px; font-size: 15px; }
+    .status {
+      display: inline-flex;
+      min-width: 70px;
+      justify-content: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: 0;
+    }
+    td small { display: block; margin-top: 4px; color: var(--muted); }
+    .status-pass { background: var(--green); }
+    .status-watch { background: var(--amber); }
+    .status-train { background: var(--red); }
+    .status-new { background: var(--violet); }
+    .level { display: flex; align-items: center; gap: 8px; min-width: 120px; }
+    .level-track {
+      width: 88px;
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e9edf4;
+    }
+    .level-track span { display: block; height: 100%; background: var(--blue); }
+    .level strong { font-size: 13px; white-space: nowrap; }
+    .link-cluster { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .source-links { margin-top: 7px; }
+    .source-links span { color: var(--muted); font-size: 13px; }
+    .muted { color: var(--muted); }
+    .day-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .day-card {
+      min-height: 112px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .day-card h3 { margin: 0 0 9px; font-size: 17px; }
+    .day-links { display: flex; gap: 6px; flex-wrap: wrap; }
+    .source-table table { min-width: 850px; }
+    .source-kind {
+      display: inline-block;
+      min-width: 86px;
+      padding: 3px 7px;
+      border-radius: 6px;
+      background: #eef2f7;
+      color: #344054;
+      font-size: 12px;
+      text-align: center;
+    }
+    footer {
+      max-width: 1320px;
+      margin: 18px auto 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    @media (max-width: 880px) {
+      header, main { padding-left: 16px; padding-right: 16px; }
+      .stats { grid-template-columns: repeat(2, minmax(130px, 1fr)); }
+      .quick-links { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="topline">
+        <div>
+          <h1>Capability dashboard: математика для Настюшика</h1>
+          <p class="subtitle">
+            Матрица навыков связывает текущий статус с проверочными материалами:
+            исходными решениями, контрольной, сгенерированными заданиями,
+            ответами и prompt'ами сессии.
+          </p>
+        </div>
+        <nav class="quick-links" aria-label="Ключевые артефакты">
+          <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%AD%D0%BA%D0%B7%D0%B0%D0%BC%D0%B5%D0%BD%20%D0%BF%D0%BE%20%D0%BC%D0%B0%D1%82%D0%B5%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B5%20%D0%9D%D0%B0%D1%81%D1%82%D1%8E%D1%88%D0%B8%D0%BA.pdf">целевая контрольная</a>
+          <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/prompts/session-prompts.md">prompts сессии</a>
+          <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/nastyushik_repo_artifacts_full.zip">полный ZIP</a>
+          <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/data/artifacts_manifest.csv">manifest</a>
+        </nav>
+      </div>
+      <div class="stats">
+        <div class="stat"><strong>4</strong><span>PASS</span><small>закреплённых навыка</small></div>
+<div class="stat"><strong>8</strong><span>WATCH</span><small>навыков под наблюдением</small></div>
+<div class="stat"><strong>2</strong><span>TRAIN</span><small>зоны тренировки</small></div>
+<div class="stat"><strong>150</strong><span>PDF</span><small>сгенерированных материалов</small></div>
+<div class="stat"><strong>57</strong><span>SRC</span><small>исходных работ и сканов</small></div>
+<div class="stat"><strong>1</strong><span>PROMPT</span><small>файл prompts сессии</small></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="toolbar">
+        <h2>Матрица возможностей</h2>
+        <div class="filters">
+          <input id="search" type="search" placeholder="Фильтр по навыку, evidence или gate">
+          <button data-status="ALL" class="active">Все</button>
+          <button data-status="PASS">PASS 4</button>
+          <button data-status="WATCH">WATCH 8</button>
+          <button data-status="TRAIN">TRAIN 2</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table aria-label="Capability matrix">
+          <thead>
+            <tr>
+              <th>Навык</th>
+              <th>Статус</th>
+              <th>Уровень</th>
+              <th>Evidence</th>
+              <th>Следующий gate</th>
+              <th>Артефакты</th>
+            </tr>
+          </thead>
+          <tbody id="capability-body">
+            <tr data-status="WATCH" data-search="отрицательные числа простые отрицательные числа держатся; иногда сбой в цепочках 10 consecutive signed arithmetic examples"><th>Отрицательные числа<code>signed_arithmetic</code></th><td><span class="status status-watch">WATCH</span><small>следить</small></td><td><div class="level"><div class="level-track"><span style="width:75%"></span></div><strong>3/4</strong></div></td><td>простые отрицательные числа держатся; иногда сбой в цепочках</td><td>10 consecutive signed arithmetic examples</td><td><div class="link-cluster"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den1_zadaniya_drobi.pdf">День 1: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den1_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den2_zadaniya_drobi.pdf">День 2: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den2_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den3_zadaniya_drobi.pdf">День 3: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den3_otvety_i_akcenty.pdf">ответы</a></div><div class="link-cluster source-links"><span>решения:</span> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/-15%20-%208%20%3D%20-23-1.pdf">-15 - 8 = -23-1.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/1-12-10%20%2B%204%3D-22%2B4%3D-18.pdf">1-12-10 + 4=-22+4=-18.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/1-446%20%2B%200%2C9%20-%201%2C56%20%3D%20-3%2C%2016.pdf">1-446 + 0,9 - 1,56 = -3, 16.pdf</a></div></td></tr>
+<tr data-status="PASS" data-search="подобные слагаемые: целые целые коэффициенты при x стабильно собираются mixed block without hint"><th>Подобные слагаемые: целые<code>like_terms_integer</code></th><td><span class="status status-pass">PASS</span><small>закреплено</small></td><td><div class="level"><div class="level-track"><span style="width:100%"></span></div><strong>4/4</strong></div></td><td>целые коэффициенты при x стабильно собираются</td><td>mixed block without hint</td><td><div class="link-cluster"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den4_zadaniya_Nastyushik.pdf">День 4: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den4_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den5_zadaniya_Nastyushik.pdf">День 5: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den5_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den6_zadaniya_Nastyushik.pdf">День 6: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den6_otvety_i_akcenty.pdf">ответы</a></div><div class="link-cluster source-links"><span>решения:</span> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/1%297%D1%85%20-%209%D1%85%2B%202%20%D1%85%20%3D%200.pdf">1)7х - 9х+ 2 х = 0.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/X%3D46%3A%202.pdf">X=46: 2.pdf</a></div></td></tr>
+<tr data-status="WATCH" data-search="подобные слагаемые: десятичные десятичные коэффициенты в целом пошли; нужен контроль знака 8 decimal-coefficient examples"><th>Подобные слагаемые: десятичные<code>like_terms_decimal</code></th><td><span class="status status-watch">WATCH</span><small>следить</small></td><td><div class="level"><div class="level-track"><span style="width:75%"></span></div><strong>3/4</strong></div></td><td>десятичные коэффициенты в целом пошли; нужен контроль знака</td><td>8 decimal-coefficient examples</td><td><div class="link-cluster"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den33_zadaniya_Nastyushik.pdf">День 33: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den33_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den34_zadaniya_Nastyushik.pdf">День 34: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den34_otvety_i_akcenty.pdf">ответы</a></div><div class="link-cluster source-links"><span>решения:</span> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/1%29%201%2C4%20%D1%85%20-%200%2C6%D1%85-%201%D1%85%20%3D%20-12%20%D1%85.pdf">1) 1,4 х - 0,6х- 1х = -12 х.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/1%291%2C20%20-%200%2C5%20%D1%85-225%20-%201%2C3%20%D1%85.pdf">1)1,20 - 0,5 х-225 - 1,3 х.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/1%2912%2C5%20%D1%85%20-%2012-%D1%85%20-%200%2C8%20-%2010%2C5%25-1.pdf">1)12,5 х - 12-х - 0,8 - 10,5%-1.pdf</a></div></td></tr>
+<tr data-status="PASS" data-search="скобки с положительным коэффициентом коэффициент перед скобкой распределяется use inside equations"><th>Скобки с положительным коэффициентом<code>parentheses_positive</code></th><td><span class="status status-pass">PASS</span><small>закреплено</small></td><td><div class="level"><div class="level-track"><span style="width:100%"></span></div><strong>4/4</strong></div></td><td>коэффициент перед скобкой распределяется</td><td>use inside equations</td><td><div class="link-cluster"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den10_zadaniya_Nastyushik.pdf">День 10: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den10_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den13_zadaniya_Nastyushik.pdf">День 13: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den13_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den36_zadaniya_Nastyushik.pdf">День 36: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den36_otvety_i_akcenty.pdf">ответы</a></div><div class="link-cluster source-links"><span>решения:</span> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%BE%D0%BA%201.-1.pdf">Блок 1.-1.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%BE%D0%BA%201.-2.pdf">Блок 1.-2.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%BE%D0%BA%201.-3.pdf">Блок 1.-3.pdf</a></div></td></tr>
+<tr data-status="WATCH" data-search="скобки с минусом минус перед скобкой в целом понятен 6 mixed sign examples"><th>Скобки с минусом<code>parentheses_negative</code></th><td><span class="status status-watch">WATCH</span><small>следить</small></td><td><div class="level"><div class="level-track"><span style="width:75%"></span></div><strong>3/4</strong></div></td><td>минус перед скобкой в целом понятен</td><td>6 mixed sign examples</td><td><div class="link-cluster"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den12_zadaniya_Nastyushik.pdf">День 12: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den12_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den15_zadaniya_Nastyushik.pdf">День 15: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den15_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den37_zadaniya_Nastyushik.pdf">День 37: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den37_otvety_i_akcenty.pdf">ответы</a></div><div class="link-cluster source-links"><span>решения:</span> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%B0%D0%BA%201.-1.pdf">Блак 1.-1.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%B0%D0%BA%201.-2.pdf">Блак 1.-2.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%B0%D0%BA%201..pdf">Блак 1..pdf</a></div></td></tr>
+<tr data-status="WATCH" data-search="линейные уравнения решение уравнений держится always divide by coefficient at final step"><th>Линейные уравнения<code>equations_one_root</code></th><td><span class="status status-watch">WATCH</span><small>следить</small></td><td><div class="level"><div class="level-track"><span style="width:75%"></span></div><strong>3/4</strong></div></td><td>решение уравнений держится</td><td>always divide by coefficient at final step</td><td><div class="link-cluster"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den10_zadaniya_Nastyushik.pdf">День 10: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den10_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den12_zadaniya_Nastyushik.pdf">День 12: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den12_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den20_zadaniya_Nastyushik.pdf">День 20: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den20_otvety_i_akcenty.pdf">ответы</a></div><div class="link-cluster source-links"><span>решения:</span> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/2%29%28-%205%29%3A%2014%20%3D%20-%2055.pdf">2)(- 5): 14 = - 55.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/5.pdf">5.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/X%3D46%3A%202.pdf">X=46: 2.pdf</a></div></td></tr>
+<tr data-status="WATCH" data-search="дробные и десятичные ответы дробные/десятичные ответы принимаются 5 non-integer root equations"><th>Дробные и десятичные ответы<code>equations_fraction_decimal_answers</code></th><td><span class="status status-watch">WATCH</span><small>следить</small></td><td><div class="level"><div class="level-track"><span style="width:75%"></span></div><strong>3/4</strong></div></td><td>дробные/десятичные ответы принимаются</td><td>5 non-integer root equations</td><td><div class="link-cluster"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den11_zadaniya_Nastyushik.pdf">День 11: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den11_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den14_zadaniya_Nastyushik.pdf">День 14: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den14_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den31_zadaniya_Nastyushik.pdf">День 31: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den31_otvety_i_akcenty.pdf">ответы</a></div><div class="link-cluster source-links"><span>решения:</span> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/1%29%201%2C4%20%D1%85%20-%200%2C6%D1%85-%201%D1%85%20%3D%20-12%20%D1%85.pdf">1) 1,4 х - 0,6х- 1х = -12 х.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/1%291%2C20%20-%200%2C5%20%D1%85-225%20-%201%2C3%20%D1%85.pdf">1)1,20 - 0,5 х-225 - 1,3 х.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/1%2912%2C5%20%D1%85%20-%2012-%D1%85%20-%200%2C8%20-%2010%2C5%25-1.pdf">1)12,5 х - 12-х - 0,8 - 10,5%-1.pdf</a></div></td></tr>
+<tr data-status="PASS" data-search="особые уравнения 0x=0 vs 0x=a vs ax=0 различаются mixed test without hint"><th>Особые уравнения<code>special_equations</code></th><td><span class="status status-pass">PASS</span><small>закреплено</small></td><td><div class="level"><div class="level-track"><span style="width:100%"></span></div><strong>4/4</strong></div></td><td>0x=0 vs 0x=a vs ax=0 различаются</td><td>mixed test without hint</td><td><div class="link-cluster"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den16_zadaniya_Nastyushik.pdf">День 16: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den16_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den18_zadaniya_Nastyushik.pdf">День 18: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den18_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den23_zadaniya_Nastyushik.pdf">День 23: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den23_otvety_i_akcenty.pdf">ответы</a></div><div class="link-cluster source-links"><span>решения:</span> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%AD%D0%BA%D0%B7%D0%B0%D0%BC%D0%B5%D0%BD%20%D0%BF%D0%BE%20%D0%BC%D0%B0%D1%82%D0%B5%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B5%20%D0%9D%D0%B0%D1%81%D1%82%D1%8E%D1%88%D0%B8%D0%BA.pdf">Экзамен по математике Настюшик.pdf</a></div></td></tr>
+<tr data-status="WATCH" data-search="простые неравенства ответ как x&gt;... уже появляется 10 inequalities with condition answer"><th>Простые неравенства<code>simple_inequalities</code></th><td><span class="status status-watch">WATCH</span><small>следить</small></td><td><div class="level"><div class="level-track"><span style="width:75%"></span></div><strong>3/4</strong></div></td><td>ответ как x&gt;... уже появляется</td><td>10 inequalities with condition answer</td><td><div class="link-cluster"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den31_zadaniya_Nastyushik.pdf">День 31: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den31_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den32_zadaniya_Nastyushik.pdf">День 32: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den32_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den36_zadaniya_Nastyushik.pdf">День 36: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den36_otvety_i_akcenty.pdf">ответы</a></div><div class="link-cluster source-links"><span>решения:</span> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%AD%D0%BA%D0%B7%D0%B0%D0%BC%D0%B5%D0%BD%20%D0%BF%D0%BE%20%D0%BC%D0%B0%D1%82%D0%B5%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B5%20%D0%9D%D0%B0%D1%81%D1%82%D1%8E%D1%88%D0%B8%D0%BA.pdf">Экзамен по математике Настюшик.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%BE%D0%BA%D1%80%D1%83%D0%B3%D0%BB%D0%B8%D1%82%D1%8C%20%D0%B4%20%D0%B1%D0%BB%D0%B8%D0%B6%D0%B0%D0%B8%CC%86%D1%88%D0%B5%D0%B3%D0%BE%20%D0%B1%D0%BE%D0%BB%D1%8C%D1%88%D0%B5%D0%B3%D0%BE%20%D1%86%D0%B5%D0%BB%D0%BE%D0%B3%D0%BE%20%D1%87%D0%B8%D1%81%D0%BB%D0%B0..pdf">округлить д ближайшего большего целого числа..pdf</a></div></td></tr>
+<tr data-status="TRAIN" data-search="неравенства с отрицательным множителем нужен переворот знака при делении на отрицательное 6 negative multiplier inequalities"><th>Неравенства с отрицательным множителем<code>negative_multiplier_inequalities</code></th><td><span class="status status-train">TRAIN</span><small>тренировать</small></td><td><div class="level"><div class="level-track"><span style="width:50%"></span></div><strong>2/4</strong></div></td><td>нужен переворот знака при делении на отрицательное</td><td>6 negative multiplier inequalities</td><td><div class="link-cluster"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den32_zadaniya_Nastyushik.pdf">День 32: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den32_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den37_zadaniya_Nastyushik.pdf">День 37: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den37_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den39_zadaniya_Nastyushik.pdf">День 39: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den39_otvety_i_akcenty.pdf">ответы</a></div><div class="link-cluster source-links"><span>решения:</span> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%AD%D0%BA%D0%B7%D0%B0%D0%BC%D0%B5%D0%BD%20%D0%BF%D0%BE%20%D0%BC%D0%B0%D1%82%D0%B5%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B5%20%D0%9D%D0%B0%D1%81%D1%82%D1%8E%D1%88%D0%B8%D0%BA.pdf">Экзамен по математике Настюшик.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%BE%D0%BA%201.-1.pdf">Блок 1.-1.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%BE%D0%BA%201.-2.pdf">Блок 1.-2.pdf</a></div></td></tr>
+<tr data-status="WATCH" data-search="проверка подстановкой проверка применяется check one valid and one invalid value"><th>Проверка подстановкой<code>substitution_check</code></th><td><span class="status status-watch">WATCH</span><small>следить</small></td><td><div class="level"><div class="level-track"><span style="width:75%"></span></div><strong>3/4</strong></div></td><td>проверка применяется</td><td>check one valid and one invalid value</td><td><div class="link-cluster"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den12_zadaniya_Nastyushik.pdf">День 12: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den12_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den20_zadaniya_Nastyushik.pdf">День 20: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den20_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den38_zadaniya_Nastyushik.pdf">День 38: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den38_otvety_i_akcenty.pdf">ответы</a></div><div class="link-cluster source-links"><span>решения:</span> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%AD%D0%BA%D0%B7%D0%B0%D0%BC%D0%B5%D0%BD%20%D0%BF%D0%BE%20%D0%BC%D0%B0%D1%82%D0%B5%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B5%20%D0%9D%D0%B0%D1%81%D1%82%D1%8E%D1%88%D0%B8%D0%BA.pdf">Экзамен по математике Настюшик.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/X%3D46%3A%202.pdf">X=46: 2.pdf</a></div></td></tr>
+<tr data-status="PASS" data-search="текстовые задачи через таблицу таблица было/стало и уравнение строятся mixed word problems without template"><th>Текстовые задачи через таблицу<code>word_problems_table</code></th><td><span class="status status-pass">PASS</span><small>закреплено</small></td><td><div class="level"><div class="level-track"><span style="width:100%"></span></div><strong>4/4</strong></div></td><td>таблица было/стало и уравнение строятся</td><td>mixed word problems without template</td><td><div class="link-cluster"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den12_zadaniya_Nastyushik.pdf">День 12: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den12_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den20_zadaniya_Nastyushik.pdf">День 20: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den20_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den23_zadaniya_Nastyushik.pdf">День 23: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den23_otvety_i_akcenty.pdf">ответы</a></div><div class="link-cluster source-links"><span>решения:</span> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%AD%D0%BA%D0%B7%D0%B0%D0%BC%D0%B5%D0%BD%20%D0%BF%D0%BE%20%D0%BC%D0%B0%D1%82%D0%B5%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B5%20%D0%9D%D0%B0%D1%81%D1%82%D1%8E%D1%88%D0%B8%D0%BA.pdf">Экзамен по математике Настюшик.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/4%29%20%D0%9F%D1%83%D1%81%D1%82%D1%8C%20%D0%A5%20%D1%8D%D1%82%D0%BE%20%D0%BA%D0%BE%D1%80%D1%84%D0%B5%D0%BD%20%D0%B2%D0%BE%20%D0%B2%D1%82%D0%BE%D1%80%D0%B0%D0%BC%20%D1%80%D0%B0%D0%BA%D0%B5%D1%82%D0%B5..pdf">4) Пусть Х это корфен во вторам ракете..pdf</a></div></td></tr>
+<tr data-status="WATCH" data-search="смысл переменной смысл x обычно подписывается first line always defines x"><th>Смысл переменной<code>variable_meaning</code></th><td><span class="status status-watch">WATCH</span><small>следить</small></td><td><div class="level"><div class="level-track"><span style="width:75%"></span></div><strong>3/4</strong></div></td><td>смысл x обычно подписывается</td><td>first line always defines x</td><td><div class="link-cluster"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den12_zadaniya_Nastyushik.pdf">День 12: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den12_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den20_zadaniya_Nastyushik.pdf">День 20: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den20_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den23_zadaniya_Nastyushik.pdf">День 23: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den23_otvety_i_akcenty.pdf">ответы</a></div><div class="link-cluster source-links"><span>решения:</span> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%AD%D0%BA%D0%B7%D0%B0%D0%BC%D0%B5%D0%BD%20%D0%BF%D0%BE%20%D0%BC%D0%B0%D1%82%D0%B5%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B5%20%D0%9D%D0%B0%D1%81%D1%82%D1%8E%D1%88%D0%B8%D0%BA.pdf">Экзамен по математике Настюшик.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/4%29%20%D0%9F%D1%83%D1%81%D1%82%D1%8C%20%D0%A5%20%D1%8D%D1%82%D0%BE%20%D0%BA%D0%BE%D1%80%D1%84%D0%B5%D0%BD%20%D0%B2%D0%BE%20%D0%B2%D1%82%D0%BE%D1%80%D0%B0%D0%BC%20%D1%80%D0%B0%D0%BA%D0%B5%D1%82%D0%B5..pdf">4) Пусть Х это корфен во вторам ракете..pdf</a></div></td></tr>
+<tr data-status="TRAIN" data-search="смешанный перенос отдельные навыки есть; смешивание повышает риск 12 mixed tasks no type hint"><th>Смешанный перенос<code>mixed_transfer</code></th><td><span class="status status-train">TRAIN</span><small>тренировать</small></td><td><div class="level"><div class="level-track"><span style="width:50%"></span></div><strong>2/4</strong></div></td><td>отдельные навыки есть; смешивание повышает риск</td><td>12 mixed tasks no type hint</td><td><div class="link-cluster"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den36_zadaniya_Nastyushik.pdf">День 36: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den36_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den38_zadaniya_Nastyushik.pdf">День 38: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den38_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den39_zadaniya_Nastyushik.pdf">День 39: задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den39_otvety_i_akcenty.pdf">ответы</a></div><div class="link-cluster source-links"><span>решения:</span> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%AD%D0%BA%D0%B7%D0%B0%D0%BC%D0%B5%D0%BD%20%D0%BF%D0%BE%20%D0%BC%D0%B0%D1%82%D0%B5%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B5%20%D0%9D%D0%B0%D1%81%D1%82%D1%8E%D1%88%D0%B8%D0%BA.pdf">Экзамен по математике Настюшик.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%BE%D0%BA%201.-1.pdf">Блок 1.-1.pdf</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%BE%D0%BA%201.-2.pdf">Блок 1.-2.pdf</a></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Дневные комплекты</h2>
+      <div class="day-grid">
+        <article class="day-card"><h3>День 1</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den1_zadaniya_drobi.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den1_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den1_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den1_dlya_rebenka.pdf">ребёнку</a></div></article>
+<article class="day-card"><h3>День 2</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den2_zadaniya_drobi.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/posle_dnya1_zadaniya_dlya_rebenka.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den2_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/den2_dlya_rebenka_po_itogam_dnya1.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den2_Nastyushik.pdf">ребёнку</a></div></article>
+<article class="day-card"><h3>День 3</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den3_zadaniya_drobi.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den3_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den3_Nastyushik.pdf">ребёнку</a></div></article>
+<article class="day-card"><h3>День 4</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den4_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den4_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den4_Nastyushik.pdf">ребёнку</a></div></article>
+<article class="day-card"><h3>День 5</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den5_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den5_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den5_Nastyushik.pdf">ребёнку</a></div></article>
+<article class="day-card"><h3>День 6</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den6_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den6_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den6_Nastyushik.pdf">ребёнку</a></div></article>
+<article class="day-card"><h3>День 7</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den7_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den7_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den7_Nastyushik.pdf">ребёнку</a></div></article>
+<article class="day-card"><h3>День 8</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den8_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den8_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den8_Nastyushik.pdf">ребёнку</a></div></article>
+<article class="day-card"><h3>День 9</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den9_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den9_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den9_Nastyushik.pdf">ребёнку</a></div></article>
+<article class="day-card"><h3>День 10</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den10_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den10_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den10_Nastyushik.pdf">ребёнку</a></div></article>
+<article class="day-card"><h3>День 11</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den11_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den11_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den11_Nastyushik.pdf">ребёнку</a></div></article>
+<article class="day-card"><h3>День 12</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den12_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den12_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den12_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den12_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 13</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den13_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den13_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den13_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den13_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 14</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den14_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den14_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den14_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den14_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 15</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den15_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den15_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den15_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den15_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 16</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den16_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den16_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den16_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den16_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 17</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den17_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den17_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den17_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den17_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 18</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den18_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den18_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den18_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den18_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 19</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den19_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den19_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den19_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den19_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 20</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den20_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den20_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den20_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den20_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 21</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den21_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den21_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den21_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den21_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 22</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den22_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den22_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den22_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den22_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 23</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den23_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den23_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den23_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den23_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 24</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den24_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den24_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den24_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den24_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 25</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den25_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den25_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den25_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den25_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 26</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den26_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den26_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den26_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den26_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 27</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den27_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den27_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den27_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den27_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 28</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den28_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den28_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den28_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den28_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 29</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den29_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den29_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den29_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den29_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 30</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den30_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den30_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den30_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den30_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 31</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den31_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den31_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den31_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den31_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 32</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den32_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den32_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den32_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den32_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 33</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den33_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den33_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den33_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den33_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 34</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den34_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den34_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den34_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den34_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 35</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den35_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den35_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den35_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den35_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 36</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den36_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den36_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den36_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den36_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 37</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den37_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den37_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den37_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den37_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 38</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den38_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den38_otvety_i_akcenty.pdf">ответы</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_child/obratnaya_svyaz_den38_Nastyushik.pdf">ребёнку</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/feedback_parent/obratnaya_svyaz_den38_dlya_roditelya.pdf">родителю</a></div></article>
+<article class="day-card"><h3>День 39</h3><div class="day-links"><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/tasks/den39_zadaniya_Nastyushik.pdf">задания</a> <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/generated/answers/den39_otvety_i_akcenty.pdf">ответы</a></div></article>
+      </div>
+    </section>
+
+    <section class="source-table">
+      <div class="toolbar">
+        <h2>Исходные решения и контрольные</h2>
+      </div>
+      <div class="table-wrap">
+        <table aria-label="Source uploads">
+          <thead>
+            <tr>
+              <th>Тип</th>
+              <th>Файл</th>
+              <th>Размер</th>
+              <th>SHA-256</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="source-kind">контрольная</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%AD%D0%BA%D0%B7%D0%B0%D0%BC%D0%B5%D0%BD%20%D0%BF%D0%BE%20%D0%BC%D0%B0%D1%82%D0%B5%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B5%20%D0%9D%D0%B0%D1%81%D1%82%D1%8E%D1%88%D0%B8%D0%BA.pdf">Экзамен по математике Настюшик.pdf</a></td><td>8.1 MB</td><td><code>c4c38f598886</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/-15%20-%208%20%3D%20-23-1.pdf">-15 - 8 = -23-1.pdf</a></td><td>17.5 MB</td><td><code>6812ffb36415</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/1%29%20-%2015%20-%208%20%3D%20-23.pdf">1) - 15 - 8 = -23.pdf</a></td><td>20.2 MB</td><td><code>af46e2cf57cb</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/1%29%20-15-8%20%3D%20-23.pdf">1) -15-8 = -23.pdf</a></td><td>30.1 MB</td><td><code>fcd273b3720e</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/1%29%201%2C4%20%D1%85%20-%200%2C6%D1%85-%201%D1%85%20%3D%20-12%20%D1%85.pdf">1) 1,4 х - 0,6х- 1х = -12 х.pdf</a></td><td>45.8 MB</td><td><code>627e42bd7a13</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/1%291%2C20%20-%200%2C5%20%D1%85-225%20-%201%2C3%20%D1%85.pdf">1)1,20 - 0,5 х-225 - 1,3 х.pdf</a></td><td>43.7 MB</td><td><code>110f0f4d08a0</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/1%2912%2C5%20%D1%85%20-%2012-%D1%85%20-%200%2C8%20-%2010%2C5%25-1.pdf">1)12,5 х - 12-х - 0,8 - 10,5%-1.pdf</a></td><td>38.1 MB</td><td><code>7d5aacbf79f9</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/1%297%D1%85%20-%209%D1%85%2B%202%20%D1%85%20%3D%200.pdf">1)7х - 9х+ 2 х = 0.pdf</a></td><td>27.3 MB</td><td><code>ba6a2776ddee</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/1-12-10%20%2B%204%3D-22%2B4%3D-18.pdf">1-12-10 + 4=-22+4=-18.pdf</a></td><td>29.2 MB</td><td><code>9acfd3a1b62a</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/1-446%20%2B%200%2C9%20-%201%2C56%20%3D%20-3%2C%2016.pdf">1-446 + 0,9 - 1,56 = -3, 16.pdf</a></td><td>35.0 MB</td><td><code>a75c91adbc9c</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/12%2C5%20%D1%85%20-%201%2C22%20-%200%2C8%20%D1%85%3D%200%2C5%20%D1%85.pdf">12,5 х - 1,22 - 0,8 х= 0,5 х.pdf</a></td><td>38.6 MB</td><td><code>650e97f85239</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/2%29%28-%205%29%3A%2014%20%3D%20-%2055.pdf">2)(- 5): 14 = - 55.pdf</a></td><td>33.9 MB</td><td><code>d13e49f15f23</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/4%29%20%D0%9F%D1%83%D1%81%D1%82%D1%8C%20%D0%A5%20%D1%8D%D1%82%D0%BE%20%D0%BA%D0%BE%D1%80%D1%84%D0%B5%D0%BD%20%D0%B2%D0%BE%20%D0%B2%D1%82%D0%BE%D1%80%D0%B0%D0%BC%20%D1%80%D0%B0%D0%BA%D0%B5%D1%82%D0%B5..pdf">4) Пусть Х это корфен во вторам ракете..pdf</a></td><td>7.9 MB</td><td><code>e9191b44428c</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/5.pdf">5.pdf</a></td><td>15.7 MB</td><td><code>856fb4407cf5</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/X%3D46%3A%202.pdf">X=46: 2.pdf</a></td><td>38.0 MB</td><td><code>6eddcfbd2107</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%B8%D0%B6%D0%BA%201..pdf">Бижк 1..pdf</a></td><td>42.7 MB</td><td><code>544b6546260a</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%B8%D0%BE%D0%BA%201..pdf">Биок 1..pdf</a></td><td>32.9 MB</td><td><code>299287691400</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%B0%D0%BA%201.-1.pdf">Блак 1.-1.pdf</a></td><td>47.3 MB</td><td><code>d0317071d108</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%B0%D0%BA%201.-2.pdf">Блак 1.-2.pdf</a></td><td>38.6 MB</td><td><code>2d63d33aee9e</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%B0%D0%BA%201..pdf">Блак 1..pdf</a></td><td>23.6 MB</td><td><code>c8554f6411a9</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%B0%D0%BA%20%D1%87..pdf">Блак ч..pdf</a></td><td>36.6 MB</td><td><code>e30dd3078026</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%BE%D0%BA%201.-1.pdf">Блок 1.-1.pdf</a></td><td>25.8 MB</td><td><code>2ef2377b759c</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%BE%D0%BA%201.-2.pdf">Блок 1.-2.pdf</a></td><td>24.0 MB</td><td><code>66aa1edd903a</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%BE%D0%BA%201.-3.pdf">Блок 1.-3.pdf</a></td><td>47.1 MB</td><td><code>2cf3ea38f940</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%BE%D0%BA%201.-4.pdf">Блок 1.-4.pdf</a></td><td>33.6 MB</td><td><code>4603426c91aa</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%BE%D0%BA%201.-5.pdf">Блок 1.-5.pdf</a></td><td>41.2 MB</td><td><code>f231a760ec3e</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%BE%D0%BA%201.-6.pdf">Блок 1.-6.pdf</a></td><td>28.2 MB</td><td><code>f2bb706e6c49</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%91%D0%BB%D0%BE%D0%BA%201..pdf">Блок 1..pdf</a></td><td>29.6 MB</td><td><code>df9722f009cd</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%94%D0%B8%D0%BE%D0%BA%201..pdf">Диок 1..pdf</a></td><td>35.0 MB</td><td><code>318b097b6080</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%94%D0%BB%D0%BE%D0%BA%201.-2.pdf">Длок 1.-2.pdf</a></td><td>22.2 MB</td><td><code>e5c4a941217b</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%94%D0%BB%D0%BE%D0%BA%201.-3.pdf">Длок 1.-3.pdf</a></td><td>31.0 MB</td><td><code>72ba6bc8a567</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%94%D0%BB%D0%BE%D0%BA%201.-4.pdf">Длок 1.-4.pdf</a></td><td>59.6 MB</td><td><code>3eaaa02f7cce</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%94%D0%BB%D0%BE%D0%BA%201.-5.pdf">Длок 1.-5.pdf</a></td><td>37.4 MB</td><td><code>f513ebbc1fe3</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%94%D0%BB%D0%BE%D0%BA%201..pdf">Длок 1..pdf</a></td><td>24.4 MB</td><td><code>fb2dc70b8e15</code></td></tr>
+<tr><td><span class="source-kind">решение</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/pdfs/%D0%BE%D0%BA%D1%80%D1%83%D0%B3%D0%BB%D0%B8%D1%82%D1%8C%20%D0%B4%20%D0%B1%D0%BB%D0%B8%D0%B6%D0%B0%D0%B8%CC%86%D1%88%D0%B5%D0%B3%D0%BE%20%D0%B1%D0%BE%D0%BB%D1%8C%D1%88%D0%B5%D0%B3%D0%BE%20%D1%86%D0%B5%D0%BB%D0%BE%D0%B3%D0%BE%20%D1%87%D0%B8%D1%81%D0%BB%D0%B0..pdf">округлить д ближайшего большего целого числа..pdf</a></td><td>22.7 MB</td><td><code>d6008355f814</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/12f61ac8-8a85-40ba-b071-3a1087054d06.jpeg">12f61ac8-8a85-40ba-b071-3a1087054d06.jpeg</a></td><td>766.6 KB</td><td><code>6a762ca1b838</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/79950611722__77AA5F97-4BC8-43DF-8A4D-C3538D093923.jpeg">79950611722__77AA5F97-4BC8-43DF-8A4D-C3538D093923.jpeg</a></td><td>706.2 KB</td><td><code>de9ad19ee457</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/79950613531__FAE79D8B-4138-4F22-8CF7-031D04F2D2FF.jpeg">79950613531__FAE79D8B-4138-4F22-8CF7-031D04F2D2FF.jpeg</a></td><td>908.5 KB</td><td><code>fb72e088d8b5</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/79950614664__45BA7AC6-4765-42BB-9C89-443FDF21FB8F.jpeg">79950614664__45BA7AC6-4765-42BB-9C89-443FDF21FB8F.jpeg</a></td><td>777.0 KB</td><td><code>53592c26016d</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/79950617535__9AD481FF-3ECC-46FE-A739-739D662C1D96.jpeg">79950617535__9AD481FF-3ECC-46FE-A739-739D662C1D96.jpeg</a></td><td>922.6 KB</td><td><code>205a0ea4aa22</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/79950618726__C42C5DF7-FA1B-41A8-9372-CF1B999B005C.jpeg">79950618726__C42C5DF7-FA1B-41A8-9372-CF1B999B005C.jpeg</a></td><td>741.3 KB</td><td><code>2eba77067c77</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/79950619680__DD25E43E-9DCA-4A96-8294-3597BB6B834C.jpeg">79950619680__DD25E43E-9DCA-4A96-8294-3597BB6B834C.jpeg</a></td><td>721.5 KB</td><td><code>276b17693544</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/79950620519__6FF46A3A-CB1B-452A-AF78-97E0A3D289BF.jpeg">79950620519__6FF46A3A-CB1B-452A-AF78-97E0A3D289BF.jpeg</a></td><td>799.2 KB</td><td><code>a8f4bac4a9a0</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/79950621889__00C7E774-9D73-44F0-8CD1-9C645B0D47F8.jpeg">79950621889__00C7E774-9D73-44F0-8CD1-9C645B0D47F8.jpeg</a></td><td>939.5 KB</td><td><code>05a23fdd60c8</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/79950622838__1023AA54-3479-4E97-9D5F-EF93AEF91A47.jpeg">79950622838__1023AA54-3479-4E97-9D5F-EF93AEF91A47.jpeg</a></td><td>803.8 KB</td><td><code>99a9e911b720</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/79950624354__37B6EBAE-9C64-4BCD-94A0-ECFBAD34EE50.jpeg">79950624354__37B6EBAE-9C64-4BCD-94A0-ECFBAD34EE50.jpeg</a></td><td>761.5 KB</td><td><code>308248693daf</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/79952209960__E72E2B0D-8DC1-4AE7-A23C-1AD8B4C41700.jpeg">79952209960__E72E2B0D-8DC1-4AE7-A23C-1AD8B4C41700.jpeg</a></td><td>561.4 KB</td><td><code>c70c1be251c1</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/79952211405__AD51C013-730B-4BE7-B938-9917C0B558C2.jpeg">79952211405__AD51C013-730B-4BE7-B938-9917C0B558C2.jpeg</a></td><td>853.9 KB</td><td><code>46cc3c4af049</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/79952214411__0FBA1AFC-4FEF-4826-9E7B-19C84653DFD2.jpeg">79952214411__0FBA1AFC-4FEF-4826-9E7B-19C84653DFD2.jpeg</a></td><td>856.3 KB</td><td><code>ceaa3b585e28</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/8b943ce5-f9ee-46d2-96e6-ee19cab474c6.jpeg">8b943ce5-f9ee-46d2-96e6-ee19cab474c6.jpeg</a></td><td>884.7 KB</td><td><code>ff7147403683</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/b4_lower.png">b4_lower.png</a></td><td>323.2 KB</td><td><code>17bde25a4c30</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/b4_right.png">b4_right.png</a></td><td>405.3 KB</td><td><code>507b869c5653</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/cce6068b-20c9-400b-aa1e-40b52432536d.jpeg">cce6068b-20c9-400b-aa1e-40b52432536d.jpeg</a></td><td>490.6 KB</td><td><code>16f9420df53d</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/d12d58b6-4b61-4b5b-993f-c118d8fa494e.jpeg">d12d58b6-4b61-4b5b-993f-c118d8fa494e.jpeg</a></td><td>589.6 KB</td><td><code>70f470fda72d</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/d3634a84-7dcf-4374-88c1-c3fd4f7c383b.jpeg">d3634a84-7dcf-4374-88c1-c3fd4f7c383b.jpeg</a></td><td>686.5 KB</td><td><code>0d55620ee3bf</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/e07325e7-e49a-40a3-b1ef-8b93e7257a30.jpeg">e07325e7-e49a-40a3-b1ef-8b93e7257a30.jpeg</a></td><td>636.3 KB</td><td><code>64e5d79d247d</code></td></tr>
+<tr><td><span class="source-kind">фото</span></td><td><a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/artifacts/source_uploads/images/Screenshot%202026-05-10%20at%2013.27.12.png">Screenshot 2026-05-10 at 13.27.12.png</a></td><td>52.3 KB</td><td><code>2c0b2e7a4723</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      Dashboard generated from
+      <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/data/capability_matrix.csv">data/capability_matrix.csv</a>
+      and <a href="https://github.com/aloschilov/nastyushik-math-skill-stack/blob/master/data/artifacts_manifest.csv">data/artifacts_manifest.csv</a>.
+      Large PDFs/images and the ZIP are tracked with Git LFS.
+    </footer>
+  </main>
+
+  <script>
+    const search = document.getElementById('search');
+    const buttons = Array.from(document.querySelectorAll('[data-status]'));
+    const rows = Array.from(document.querySelectorAll('#capability-body tr'));
+    let statusFilter = 'ALL';
+
+    function applyFilters() {
+      const query = search.value.trim().toLowerCase();
+      rows.forEach((row) => {
+        const statusOk = statusFilter === 'ALL' || row.dataset.status === statusFilter;
+        const queryOk = !query || row.dataset.search.includes(query);
+        row.hidden = !(statusOk && queryOk);
+      });
+    }
+
+    search.addEventListener('input', applyFilters);
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        statusFilter = button.dataset.status;
+        buttons.forEach((b) => b.classList.toggle('active', b === button));
+        applyFilters();
+      });
+    });
+  </script>
+</body>
+</html>

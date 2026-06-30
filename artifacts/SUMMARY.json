@@ -1,0 +1,16 @@
+{
+  "created_utc": "2026-06-30T07:02:49.146851+00:00",
+  "file_count_excluding_readme_manifest": 268,
+  "counts": {
+    "source_uploads/pdfs": 35,
+    "source_uploads/images": 22,
+    "tooling/generated_scripts": 8,
+    "generated/answers": 39,
+    "generated/tasks": 40,
+    "generated/feedback_child": 43,
+    "repo_seed_zip": 1,
+    "generated/feedback_parent": 28,
+    "session": 1,
+    "repo_template": 51
+  }
+}

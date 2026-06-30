@@ -8,6 +8,26 @@ Expected archive path:
 artifacts/nastyushik_repo_artifacts_full.zip
 ```
 
+The archive has also been unpacked into repo-facing locations:
+
+```text
+artifacts/generated/tasks/            # generated worksheets
+artifacts/generated/answers/          # answer keys and checking accents
+artifacts/generated/feedback_child/   # child-facing feedback
+artifacts/generated/feedback_parent/  # parent-facing feedback
+artifacts/source_uploads/pdfs/        # uploaded solutions and target control
+artifacts/source_uploads/images/      # uploaded photos/screenshots
+prompts/session-prompts.md            # user prompts from the ChatGPT session
+scripts/generated/                    # helper scripts from the session
+data/artifacts_manifest.csv           # original archive inventory
+```
+
+The target control / objective artifact for the dashboard is:
+
+```text
+artifacts/source_uploads/pdfs/Экзамен по математике Настюшик.pdf
+```
+
 Expected SHA-256:
 
 ```text
@@ -37,4 +57,11 @@ Integrity check after clone:
 ```bash
 git lfs pull
 shasum -a 256 -c artifacts/nastyushik_repo_artifacts_full.zip.sha256
+```
+
+Regenerate the GitHub Pages dashboard after changing artifacts or matrix data:
+
+```bash
+python3 scripts/generate_dashboard.py
+python3 scripts/validate_matrix.py
 ```
