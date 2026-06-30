@@ -1,0 +1,15 @@
+capability,status,level,evidence,next_gate
+signed_arithmetic,WATCH,3,"простые отрицательные числа держатся; иногда сбой в цепочках",10 consecutive signed arithmetic examples
+like_terms_integer,PASS,4,"целые коэффициенты при x стабильно собираются",mixed block without hint
+like_terms_decimal,WATCH,3,"десятичные коэффициенты в целом пошли; нужен контроль знака",8 decimal-coefficient examples
+parentheses_positive,PASS,4,"коэффициент перед скобкой распределяется",use inside equations
+parentheses_negative,WATCH,3,"минус перед скобкой в целом понятен",6 mixed sign examples
+equations_one_root,WATCH,3,"решение уравнений держится",always divide by coefficient at final step
+equations_fraction_decimal_answers,WATCH,3,"дробные/десятичные ответы принимаются",5 non-integer root equations
+special_equations,PASS,4,"0x=0 vs 0x=a vs ax=0 различаются",mixed test without hint
+simple_inequalities,WATCH,3,"ответ как x>... уже появляется",10 inequalities with condition answer
+negative_multiplier_inequalities,TRAIN,2,"нужен переворот знака при делении на отрицательное",6 negative multiplier inequalities
+substitution_check,WATCH,3,"проверка применяется",check one valid and one invalid value
+word_problems_table,PASS,4,"таблица было/стало и уравнение строятся",mixed word problems without template
+variable_meaning,WATCH,3,"смысл x обычно подписывается",first line always defines x
+mixed_transfer,TRAIN,2,"отдельные навыки есть; смешивание повышает риск",12 mixed tasks no type hint
