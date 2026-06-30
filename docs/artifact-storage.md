@@ -11,7 +11,7 @@ artifacts/nastyushik_repo_artifacts_full.zip
 Expected SHA-256:
 
 ```text
-56bca25bd89dec8ced6d3d74b70c82269e0b03f3c5bdb3dc7a25ca948736e488  nastyushik_repo_artifacts_full.zip
+56bca25bd89dec8ced6d3d74b70c82269e0b03f3c5bdb3dc7a25ca948736e488  artifacts/nastyushik_repo_artifacts_full.zip
 ```
 
 Recommended local upload flow:
@@ -25,7 +25,7 @@ git lfs track "*.zip"
 
 mkdir -p artifacts
 cp /path/to/nastyushik_repo_artifacts_full.zip artifacts/
-sha256sum artifacts/nastyushik_repo_artifacts_full.zip > artifacts/nastyushik_repo_artifacts_full.zip.sha256
+shasum -a 256 artifacts/nastyushik_repo_artifacts_full.zip > artifacts/nastyushik_repo_artifacts_full.zip.sha256
 
 git add .gitattributes artifacts/nastyushik_repo_artifacts_full.zip artifacts/nastyushik_repo_artifacts_full.zip.sha256
 git commit -m "Add complete session artifact archive"
@@ -36,5 +36,5 @@ Integrity check after clone:
 
 ```bash
 git lfs pull
-sha256sum -c artifacts/nastyushik_repo_artifacts_full.zip.sha256
+shasum -a 256 -c artifacts/nastyushik_repo_artifacts_full.zip.sha256
 ```
