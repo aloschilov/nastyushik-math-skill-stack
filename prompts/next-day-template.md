@@ -16,5 +16,6 @@
 - примеры формата: \(-3x \le 12 \Rightarrow x \ge -4\), \(0{,}5x \cdot 8x^2 = 4x^3\), \(50^\circ\);
 - не использовать plain-text варианты x^2, <=, >=, ->, * в материалах для ребёнка и родителя;
 - в итоговых PDF формулы должны быть отрендерены, а не показаны буквальным текстом \(...\);
+- preferred workflow: создать Markdown-исходники в artifacts/generated/source/dayNN/ и собрать их через python3 scripts/build_day_pdfs.py --day NN --update-manifest --render-preview;
 - стиль: поддерживающий, обращаться к ребёнку как “Настюшик”.
 ```

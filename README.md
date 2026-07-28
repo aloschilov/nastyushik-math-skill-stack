@@ -28,16 +28,19 @@ nastyushik-math-skill-stack/
 ├── AGENTS.md                         # repo-level инструкции для Codex
 ├── MATRIX.md                         # основная capability matrix
 ├── artifacts/generated/              # задания, ответы, обратная связь
+├── artifacts/generated/source/dayNN/ # Markdown-исходники новых дневных PDF
 ├── artifacts/source_uploads/          # исходные решения, фото, контрольные
 ├── artifacts/nastyushik_repo_artifacts_full.zip
 ├── data/capability_matrix.csv         # табличная версия матрицы
 ├── data/artifacts_manifest.csv        # inventory файлов из полной сессии
 ├── docs/index.html                    # GitHub Pages dashboard
 ├── docs/day-notes.md                  # краткая история итераций
+├── docs/latex-workflow.md             # Markdown -> Pandoc/XeLaTeX -> PDF
 ├── docs/skill-gates.md                # критерии: когда навык считать закреплённым
 ├── docs/parent-review-checklist.md    # чек-лист для проверки тетради
 ├── prompts/next-day-template.md       # шаблон запроса для следующего дня
 ├── prompts/session-prompts.md         # prompts исходной ChatGPT-сессии
+├── scripts/build_day_pdfs.py          # сборка дневных PDF из Markdown
 ├── scripts/generate_dashboard.py      # сборка GitHub Pages dashboard
 ├── scripts/validate_matrix.py         # простая проверка CSV
 └── .github/workflows/                 # CI-проверка и GitHub Pages deploy
@@ -49,7 +52,13 @@ nastyushik-math-skill-stack/
 
 Repo-level правило для будущих генераций описано в [AGENTS.md](AGENTS.md): новые математические выражения задаются в LaTeX-нотации, например \(x^2\), \(-3x \le 12 \Rightarrow x \ge -4\), \(0{,}5x \cdot 8x^2 = 4x^3\).
 
-Текущий стандарт: LaTeX-исходник в Markdown/скриптах и отрендеренные формулы в PDF. В итоговых PDF ребёнок не должен видеть сырые маркеры вроде `\(`, `\le`, `\Rightarrow`. Локально уже доступны TeX-инструменты `latex`, `dvipng`, `xelatex`, `latexmk`, `dvisvgm` и `pandoc`; устанавливать отдельный LaTeX-дистрибутив для этой конвенции не нужно.
+Текущий стандарт: LaTeX-исходник в Markdown и отрендеренные формулы в PDF. В итоговых PDF ребёнок не должен видеть сырые маркеры вроде `\(`, `\le`, `\Rightarrow`. Локально уже доступны TeX-инструменты `pandoc`, `xelatex`, `latexmk`, `latex`, `dvipng`, `dvisvgm` и Poppler; устанавливать отдельный LaTeX-дистрибутив для этой конвенции не нужно.
+
+Новые дневные комплекты собираются через [docs/latex-workflow.md](docs/latex-workflow.md): Markdown-исходники лежат в `artifacts/generated/source/dayNN/`, а PDF пересобираются командой:
+
+```bash
+python3 scripts/build_day_pdfs.py --day 44 --update-manifest --render-preview
+```
 
 ## GitHub Pages dashboard
 
@@ -82,7 +91,13 @@ artifacts/source_uploads/pdfs/Экзамен по математике Наст�
 3. Разложить новые PDF/фото в `artifacts/generated/` или `artifacts/source_uploads/`.
 4. Обновить `data/artifacts_manifest.csv`, если добавились новые артефакты.
 5. Сгенерировать следующий день по шаблону из `prompts/next-day-template.md`.
-6. Пересобрать dashboard и прогнать проверки:
+6. Для новых дневных PDF использовать Markdown/XeLaTeX workflow:
+
+```bash
+python3 scripts/build_day_pdfs.py --day NN --update-manifest --render-preview
+```
+
+7. Пересобрать dashboard и прогнать проверки:
 
 ```bash
 python3 scripts/generate_dashboard.py

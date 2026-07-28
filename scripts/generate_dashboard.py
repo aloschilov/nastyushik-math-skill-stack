@@ -358,7 +358,12 @@ def render_stats(
     status_counts = defaultdict(int)
     for cap in capabilities:
         status_counts[cap["status"]] += 1
-    generated_count = sum(1 for item in artifacts if item["category"].startswith("generated/"))
+    generated_count = sum(
+        1
+        for item in artifacts
+        if item["category"].startswith("generated/")
+        and item["final_path"].lower().endswith(".pdf")
+    )
     source_count = sum(1 for item in artifacts if item["category"].startswith("source_uploads/"))
     prompt_count = summary.get("counts", {}).get("session", 1)
     cards = [
