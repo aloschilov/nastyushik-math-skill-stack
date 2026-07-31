@@ -3,7 +3,7 @@
 Версия 2. Фокус этой версии — не архитектура, а конкретные материалы: что можно
 отправлять Настюшик между занятиями с репетитором.
 
-Дата проверки ссылок: 2026-07-17.
+Дата проверки ссылок: 2026-07-31.
 
 ## Как пользоваться
 
@@ -37,6 +37,7 @@
 | Одночлены, короткое Rutube-видео | https://rutube.ru/video/747ad394c94dcc369c07773138107d53/ | Если нужен короткий повтор |
 | Многочлены: стандартный вид | https://interneturok.ru/h/biblioteka/algebra/7-klass/privedenie-mnogochlenov-k-standartnomu-vidu-tipovie-zadachi/1 | После одночленов |
 | Сложение и вычитание многочленов | https://interneturok.ru/h/biblioteka/algebra/7-klass/slozhenie-i-vichitanie-mnogochlenov-tipovie-zadachi/1 | Когда держатся скобки и подобные слагаемые |
+| Умножение многочлена на одночлен | https://interneturok.ru/h/biblioteka/algebra/7-klass/umnozhenie-mnogochlena-na-odnochlen-tipovie-zadachi/1 | После сложения и вычитания многочленов |
 | Библиотека алгебры 7 класса | https://interneturok.ru/h/biblioteka/algebra/7-klass | Для поиска соседних тем |
 
 ### Геометрия

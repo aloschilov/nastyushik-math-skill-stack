@@ -8,7 +8,7 @@ equations_one_root,WATCH,3,"решение уравнений держится",
 equations_fraction_decimal_answers,WATCH,3,"дробные/десятичные ответы принимаются",5 non-integer root equations
 special_equations,PASS,4,"0x=0 vs 0x=a vs ax=0 различаются",mixed test without hint
 simple_inequalities,WATCH,3,"ответ как x>... уже появляется",10 inequalities with condition answer
-negative_multiplier_inequalities,TRAIN,2,"переворот знака частично есть; теряются строгий/нестрогий знак и десятичный отрицательный коэффициент",6 inequalities preserve direction and strictness
+negative_multiplier_inequalities,TRAIN,2,"3 из 4 коротких неравенств Дня 47 решены с переворотом знака; десятичный отрицательный коэффициент остаётся ловушкой",6 inequalities preserve direction and strictness
 substitution_check,WATCH,3,"проверка применяется",check one valid and one invalid value
 word_problems_table,PASS,4,"таблица было/стало и уравнение строятся",mixed word problems without template
 variable_meaning,WATCH,3,"смысл x обычно подписывается",first line always defines x
