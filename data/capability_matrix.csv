@@ -3,13 +3,13 @@ signed_arithmetic,WATCH,3,"простые отрицательные числа 
 like_terms_integer,PASS,4,"целые коэффициенты при x стабильно собираются",mixed block without hint
 like_terms_decimal,WATCH,3,"десятичные коэффициенты в целом пошли; нужен контроль знака",8 decimal-coefficient examples
 parentheses_positive,PASS,4,"коэффициент перед скобкой распределяется",use inside equations
-parentheses_negative,WATCH,3,"минус перед скобкой в целом держится, но в Дне 50 ошибка во втором произведении при двух минусах",keep in mixed expressions
+parentheses_negative,WATCH,3,"День 51: прямое раскрытие с двумя минусами верное; в смешанном примере с p знак второго произведения снова сорвался",keep in mixed expressions
 equations_one_root,WATCH,3,"решение уравнений держится",always divide by coefficient at final step
 equations_fraction_decimal_answers,WATCH,3,"дробные/десятичные ответы принимаются",5 non-integer root equations
 special_equations,PASS,4,"0x=0 vs 0x=a vs ax=0 различаются",mixed test without hint
-simple_inequalities,WATCH,3,"ответ как условие уже пишется, но в Дне 49 направление знака снова требует контроля",10 inequalities with condition answer
-negative_multiplier_inequalities,TRAIN,2,"День 49: после успеха Дня 48 неравенства снова просели, в 3 из 4 примеров неверно направление знака",6 inequalities preserve direction and strictness
+simple_inequalities,TRAIN,2,"День 51: даже при положительном коэффициенте направление знака нестабильно; нужно отделить знак делителя от вычисления ответа",10 inequalities with condition answer
+negative_multiplier_inequalities,TRAIN,2,"День 51: в неравенствах с отрицательным коэффициентом направление знака снова выбрано противоположно нужному",6 inequalities preserve direction and strictness
 substitution_check,WATCH,3,"проверка применяется",check one valid and one invalid value
 word_problems_table,PASS,4,"таблица было/стало и уравнение строятся",mixed word problems without template
 variable_meaning,WATCH,3,"смысл x обычно подписывается",first line always defines x
-mixed_transfer,TRAIN,2,"День 50: буквенная часть почти стабилизировалась, но знак второго произведения и неравенства остаются риском",12 mixed tasks no type hint
+mixed_transfer,TRAIN,2,"День 51: алгебра в смешанном блоке почти держится; главный перенос пока ломается на неравенствах",12 mixed tasks no type hint
