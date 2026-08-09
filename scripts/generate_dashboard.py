@@ -32,17 +32,10 @@ SESSION_PROMPTS = "prompts/session-prompts.md"
 
 
 STATUS_LABELS = {
-    "PASS": "PASS",
-    "WATCH": "WATCH",
-    "TRAIN": "TRAIN",
-    "NEW": "NEW",
-}
-
-STATUS_TEXT = {
-    "PASS": "закреплено",
-    "WATCH": "следить",
-    "TRAIN": "тренировать",
-    "NEW": "новое",
+    "PASS": "Закреплено",
+    "WATCH": "Наблюдаем",
+    "TRAIN": "Тренируем",
+    "NEW": "Новое",
 }
 
 STATUS_CLASS = {
@@ -76,16 +69,16 @@ CAPABILITY_DAY_HINTS = {
     "like_terms_decimal": [33, 34],
     "parentheses_positive": [10, 13, 36],
     "parentheses_negative": [12, 15, 37],
-    "factor_common_monomial": [54, 55],
+    "factor_common_monomial": [54, 55, 56],
     "equations_one_root": [10, 12, 20, 38],
     "equations_fraction_decimal_answers": [11, 14, 31],
     "special_equations": [16, 18, 23],
-    "simple_inequalities": [31, 32, 36],
-    "negative_multiplier_inequalities": [32, 37, 39],
+    "simple_inequalities": [31, 32, 36, 56],
+    "negative_multiplier_inequalities": [32, 37, 39, 56],
     "substitution_check": [12, 20, 38],
     "word_problems_table": [12, 20, 23],
     "variable_meaning": [12, 20, 23],
-    "mixed_transfer": [36, 38, 39],
+    "mixed_transfer": [36, 38, 39, 56],
 }
 
 CAPABILITY_SOURCE_HINTS = {
@@ -94,7 +87,7 @@ CAPABILITY_SOURCE_HINTS = {
     "like_terms_decimal": ["12,5 х", "1,4 х", "1,20"],
     "parentheses_positive": ["Блок 1.", "Длок 1."],
     "parentheses_negative": ["Блак", "Длок"],
-    "factor_common_monomial": ["Днек", "Длок"],
+    "factor_common_monomial": ["Днек", "Длок", "Блок 2."],
     "equations_one_root": ["X=46", "2)(- 5)", "5.pdf"],
     "equations_fraction_decimal_answers": ["12,5 х", "1,20", "1,4 х"],
     "special_equations": ["Экзамен по математике"],
@@ -105,6 +98,13 @@ CAPABILITY_SOURCE_HINTS = {
     "variable_meaning": ["Пусть Х", "Экзамен по математике"],
     "mixed_transfer": ["Экзамен по математике", "Блок", "Длок"],
 }
+
+FOCUS_ORDER = [
+    "negative_multiplier_inequalities",
+    "simple_inequalities",
+    "factor_common_monomial",
+    "mixed_transfer",
+]
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -284,8 +284,7 @@ def level_bar(level: str) -> str:
 def status_badge(status: str) -> str:
     cls = STATUS_CLASS.get(status, "status-new")
     label = STATUS_LABELS.get(status, status)
-    text = STATUS_TEXT.get(status, "")
-    return f'<span class="status {cls}">{esc(label)}</span><small>{esc(text)}</small>'
+    return f'<span class="status {cls}">{esc(label)}</span>'
 
 
 def render_capability_rows(
@@ -301,12 +300,12 @@ def render_capability_rows(
             "<tr "
             f'data-status="{esc(cap["status"])}" '
             f'data-search="{esc((title + " " + cap["evidence"] + " " + cap["next_gate"]).lower())}">'
-            f"<th>{esc(title)}<code>{esc(key)}</code></th>"
-            f"<td>{status_badge(cap['status'])}</td>"
-            f"<td>{level_bar(cap['level'])}</td>"
-            f"<td>{esc(cap['evidence'])}</td>"
-            f"<td>{esc(cap['next_gate'])}</td>"
-            f"<td>{capability_artifacts(key, day_index, source)}</td>"
+            f"<th scope=\"row\">{esc(title)}</th>"
+            f"<td data-label=\"Статус\">{status_badge(cap['status'])}</td>"
+            f"<td data-label=\"Уровень\">{level_bar(cap['level'])}</td>"
+            f"<td data-label=\"Что уже видно\">{esc(cap['evidence'])}</td>"
+            f"<td data-label=\"Следующий шаг\">{esc(cap['next_gate'])}</td>"
+            f"<td data-label=\"Материалы\">{capability_artifacts(key, day_index, source)}</td>"
             "</tr>"
         )
     return "\n".join(rows)
@@ -320,7 +319,7 @@ def render_day_cards(day_index: dict[int, dict[str, list[dict[str, str]]]]) -> s
         "feedback_child": "ребёнку",
         "feedback_parent": "родителю",
     }
-    for day in sorted(day_index):
+    for day in sorted(day_index, reverse=True):
         bundle = day_index[day]
         file_links: list[str] = []
         for kind in ["tasks", "answers", "feedback_child", "feedback_parent"]:
@@ -333,6 +332,50 @@ def render_day_cards(day_index: dict[int, dict[str, list[dict[str, str]]]]) -> s
             "</article>"
         )
     return "\n".join(cards)
+
+
+def render_latest_bundle(
+    latest_day: int,
+    day_index: dict[int, dict[str, list[dict[str, str]]]],
+) -> str:
+    if not latest_day:
+        return '<span class="muted">Комплекты ещё не добавлены</span>'
+    labels = {
+        "tasks": "Задания ребёнку",
+        "answers": "Ответы родителю",
+        "feedback_child": "Обратная связь ребёнку",
+        "feedback_parent": "Обратная связь родителю",
+    }
+    links: list[str] = []
+    for kind in ["tasks", "answers", "feedback_child", "feedback_parent"]:
+        bundle_day = latest_day if kind in {"tasks", "answers"} else latest_day - 1
+        bundle = day_index.get(bundle_day, {})
+        for item in bundle.get(kind, [])[:1]:
+            links.append(link(item["final_path"], labels[kind]))
+    return (
+        f'<div class="latest-number">День {latest_day}</div>'
+        '<div class="latest-copy"><strong>Комплект готов к выдаче</strong>'
+        '<span>Начните с задания; ответы и обратная связь находятся рядом.</span></div>'
+        f'<div class="latest-links">{" ".join(links)}</div>'
+    )
+
+
+def render_focus(capabilities: list[dict[str, str]]) -> str:
+    by_key = {cap["capability"]: cap for cap in capabilities}
+    cards: list[str] = []
+    for key in FOCUS_ORDER:
+        cap = by_key.get(key)
+        if not cap or cap["status"] == "PASS":
+            continue
+        title = CAPABILITY_LABELS.get(key, key)
+        cards.append(
+            '<article class="focus-item">'
+            f'<div><h3>{esc(title)}</h3>{status_badge(cap["status"])}</div>'
+            f'<p>{esc(cap["evidence"])}</p>'
+            f'<strong>Дальше: {esc(cap["next_gate"])}</strong>'
+            '</article>'
+        )
+    return "\n".join(cards) or '<p class="muted">Срочных зон тренировки нет.</p>'
 
 
 def render_source_list(source: list[dict[str, str]]) -> str:
@@ -357,31 +400,22 @@ def render_stats(
     capabilities: list[dict[str, str]],
     artifacts: list[dict[str, str]],
     summary: dict,
+    latest_day: int,
 ) -> str:
     status_counts = defaultdict(int)
     for cap in capabilities:
         status_counts[cap["status"]] += 1
-    generated_count = sum(
-        1
-        for item in artifacts
-        if item["category"].startswith("generated/")
-        and item["final_path"].lower().endswith(".pdf")
-    )
-    source_count = sum(1 for item in artifacts if item["category"].startswith("source_uploads/"))
-    prompt_count = summary.get("counts", {}).get("session", 1)
     cards = [
-        ("PASS", status_counts["PASS"], "закреплённых навыка"),
-        ("WATCH", status_counts["WATCH"], "навыков под наблюдением"),
-        ("TRAIN", status_counts["TRAIN"], "зоны тренировки"),
-        ("PDF", generated_count, "сгенерированных материалов"),
-        ("SRC", source_count, "исходных работ и сканов"),
-        ("PROMPT", prompt_count, "файл prompts сессии"),
+        (status_counts["PASS"], "закреплено"),
+        (status_counts["WATCH"], "под наблюдением"),
+        (status_counts["TRAIN"], "тренируем сейчас"),
+        (f"День {latest_day}" if latest_day else "-", "последний комплект"),
     ]
     return "\n".join(
         '<div class="stat">'
-        f"<strong>{esc(value)}</strong><span>{esc(label)}</span><small>{esc(note)}</small>"
+        f"<strong>{esc(value)}</strong><span>{esc(label)}</span>"
         "</div>"
-        for label, value, note in cards
+        for value, label in cards
     )
 
 
@@ -391,6 +425,7 @@ def render_html() -> str:
     summary = read_summary()
     day_index = build_day_index(artifacts)
     source = build_source_index(artifacts)
+    latest_day = max(day_index, default=0)
 
     pass_count = sum(1 for cap in capabilities if cap["status"] == "PASS")
     watch_count = sum(1 for cap in capabilities if cap["status"] == "WATCH")
@@ -406,17 +441,17 @@ def render_html() -> str:
   <style>
     :root {{
       color-scheme: light;
-      --bg: #f7f8fb;
+      --bg: #f5f7fa;
       --panel: #ffffff;
       --ink: #1c2331;
       --muted: #667085;
       --line: #d9dee8;
+      --soft: #eef2f7;
       --blue: #2563eb;
       --green: #14804a;
       --amber: #b76e00;
       --red: #bd2b2b;
       --violet: #6d4aff;
-      --shadow: 0 10px 30px rgba(18, 28, 45, 0.08);
     }}
     * {{ box-sizing: border-box; }}
     body {{
@@ -450,8 +485,8 @@ def render_html() -> str:
     }}
     h1 {{
       margin: 0;
-      font-size: clamp(28px, 4vw, 44px);
-      line-height: 1.08;
+      font-size: 36px;
+      line-height: 1.12;
       letter-spacing: 0;
     }}
     .subtitle {{ max-width: 820px; margin: 12px 0 0; color: var(--muted); }}
@@ -480,7 +515,7 @@ def render_html() -> str:
     section {{ margin: 0 auto 24px; max-width: 1320px; }}
     .stats {{
       display: grid;
-      grid-template-columns: repeat(6, minmax(130px, 1fr));
+      grid-template-columns: repeat(4, minmax(150px, 1fr));
       gap: 10px;
       margin-top: 18px;
     }}
@@ -490,11 +525,58 @@ def render_html() -> str:
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--panel);
-      box-shadow: var(--shadow);
     }}
     .stat strong {{ display: block; font-size: 28px; line-height: 1; }}
     .stat span {{ display: block; margin-top: 8px; font-weight: 650; }}
-    .stat small {{ color: var(--muted); }}
+    .latest-panel {{
+      display: grid;
+      grid-template-columns: auto minmax(220px, 1fr) minmax(300px, auto);
+      gap: 18px;
+      align-items: center;
+      padding: 18px;
+      border: 1px solid #b8c9e8;
+      border-left: 5px solid var(--blue);
+      border-radius: 8px;
+      background: var(--panel);
+    }}
+    .latest-number {{
+      color: var(--blue);
+      font-size: 24px;
+      font-weight: 750;
+      white-space: nowrap;
+    }}
+    .latest-copy strong, .latest-copy span {{ display: block; }}
+    .latest-copy span {{ margin-top: 3px; color: var(--muted); }}
+    .latest-links {{ display: flex; flex-wrap: wrap; gap: 7px; justify-content: flex-end; }}
+    .latest-links a {{
+      display: inline-flex;
+      min-height: 34px;
+      align-items: center;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: #26364f;
+      font-size: 13px;
+    }}
+    .section-heading {{ margin: 0 0 10px; }}
+    .section-heading h2 {{ margin: 0; font-size: 22px; }}
+    .section-heading p {{ margin: 4px 0 0; color: var(--muted); }}
+    .focus-grid {{
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }}
+    .focus-item {{
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }}
+    .focus-item > div {{ display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }}
+    .focus-item h3 {{ margin: 0; font-size: 16px; }}
+    .focus-item p {{ margin: 10px 0; color: #344054; }}
+    .focus-item > strong {{ display: block; font-size: 13px; color: var(--muted); }}
     .toolbar {{
       display: flex;
       align-items: center;
@@ -530,7 +612,6 @@ def render_html() -> str:
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--panel);
-      box-shadow: var(--shadow);
     }}
     table {{ width: 100%; border-collapse: collapse; min-width: 1050px; }}
     th, td {{
@@ -553,7 +634,7 @@ def render_html() -> str:
     tbody th {{ width: 250px; font-size: 15px; }}
     .status {{
       display: inline-flex;
-      min-width: 70px;
+      min-width: 92px;
       justify-content: center;
       padding: 4px 8px;
       border-radius: 999px;
@@ -593,7 +674,6 @@ def render_html() -> str:
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--panel);
-      box-shadow: var(--shadow);
     }}
     .day-card h3 {{ margin: 0 0 9px; font-size: 17px; }}
     .day-links {{ display: flex; gap: 6px; flex-wrap: wrap; }}
@@ -614,10 +694,57 @@ def render_html() -> str:
       color: var(--muted);
       font-size: 13px;
     }}
+    details.archive {{
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+    }}
+    details.archive > summary {{
+      width: fit-content;
+      color: var(--ink);
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+    }}
+    details.archive[open] > summary {{ margin-bottom: 12px; }}
     @media (max-width: 880px) {{
       header, main {{ padding-left: 16px; padding-right: 16px; }}
       .stats {{ grid-template-columns: repeat(2, minmax(130px, 1fr)); }}
       .quick-links {{ width: 100%; }}
+      .latest-panel {{ grid-template-columns: 1fr; gap: 10px; }}
+      .latest-links {{ justify-content: flex-start; }}
+      .focus-grid {{ grid-template-columns: 1fr; }}
+    }}
+    @media (max-width: 700px) {{
+      h1 {{ font-size: 30px; }}
+      .table-wrap {{ overflow: visible; border: 0; background: transparent; }}
+      table, tbody, tr, th, td {{ display: block; width: 100%; }}
+      table {{ min-width: 0; }}
+      thead {{ display: none; }}
+      tbody tr {{
+        margin-bottom: 10px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }}
+      tbody tr[hidden] {{ display: none; }}
+      tbody th {{ width: auto; padding: 14px; background: var(--soft); }}
+      tbody td {{
+        display: grid;
+        grid-template-columns: 108px minmax(0, 1fr);
+        gap: 10px;
+        padding: 11px 14px;
+      }}
+      tbody td::before {{
+        content: attr(data-label);
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+      }}
+      .source-table tbody td:first-child::before {{ content: "Тип"; }}
+      .source-table tbody td:nth-child(2)::before {{ content: "Файл"; }}
+      .source-table tbody td:nth-child(3)::before {{ content: "Размер"; }}
+      .source-table tbody td:nth-child(4)::before {{ content: "SHA-256"; }}
     }}
   </style>
 </head>
@@ -626,36 +753,53 @@ def render_html() -> str:
     <div class="wrap">
       <div class="topline">
         <div>
-          <h1>Capability dashboard: математика для Настюшика</h1>
+          <h1>Математика Настюшика</h1>
           <p class="subtitle">
-            Матрица навыков связывает текущий статус с проверочными материалами:
-            исходными решениями, контрольной, сгенерированными заданиями,
-            ответами и prompt'ами сессии.
+            Здесь видно, что уже закреплено, что сейчас требует внимания
+            и какой комплект выдавать следующим.
           </p>
         </div>
         <nav class="quick-links" aria-label="Ключевые артефакты">
-          {link(TARGET_CONTROL, "целевая контрольная")}
-          {link(SESSION_PROMPTS, "prompts сессии")}
-          {link(FULL_ARCHIVE, "полный ZIP")}
-          {link("data/artifacts_manifest.csv", "manifest")}
+          {link(TARGET_CONTROL, "Итоговая контрольная")}
+          {link(SESSION_PROMPTS, "Шаблоны запросов")}
+          {link(FULL_ARCHIVE, "Скачать весь архив")}
         </nav>
       </div>
       <div class="stats">
-        {render_stats(capabilities, artifacts, summary)}
+        {render_stats(capabilities, artifacts, summary, latest_day)}
       </div>
     </div>
   </header>
 
   <main>
+    <section aria-labelledby="latest-title">
+      <div class="section-heading">
+        <h2 id="latest-title">Что выдавать сейчас</h2>
+      </div>
+      <div class="latest-panel">
+        {render_latest_bundle(latest_day, day_index)}
+      </div>
+    </section>
+
+    <section aria-labelledby="focus-title">
+      <div class="section-heading">
+        <h2 id="focus-title">Сейчас в фокусе</h2>
+        <p>Навыки, которые определяют ближайшие задания.</p>
+      </div>
+      <div class="focus-grid">
+        {render_focus(capabilities)}
+      </div>
+    </section>
+
     <section>
       <div class="toolbar">
-        <h2>Матрица возможностей</h2>
+        <h2>Все навыки</h2>
         <div class="filters">
-          <input id="search" type="search" placeholder="Фильтр по навыку, evidence или gate">
+          <input id="search" type="search" placeholder="Найти навык или наблюдение">
           <button data-status="ALL" class="active">Все</button>
-          <button data-status="PASS">PASS {pass_count}</button>
-          <button data-status="WATCH">WATCH {watch_count}</button>
-          <button data-status="TRAIN">TRAIN {train_count}</button>
+          <button data-status="PASS">Закреплено: {pass_count}</button>
+          <button data-status="WATCH">Наблюдаем: {watch_count}</button>
+          <button data-status="TRAIN">Тренируем: {train_count}</button>
         </div>
       </div>
       <div class="table-wrap">
@@ -665,9 +809,9 @@ def render_html() -> str:
               <th>Навык</th>
               <th>Статус</th>
               <th>Уровень</th>
-              <th>Evidence</th>
-              <th>Следующий gate</th>
-              <th>Артефакты</th>
+              <th>Что уже видно</th>
+              <th>Следующий шаг</th>
+              <th>Материалы</th>
             </tr>
           </thead>
           <tbody id="capability-body">
@@ -678,18 +822,19 @@ def render_html() -> str:
     </section>
 
     <section>
-      <h2>Дневные комплекты</h2>
-      <div class="day-grid">
-        {render_day_cards(day_index)}
-      </div>
+      <details class="archive">
+        <summary>Архив дневных комплектов</summary>
+        <div class="day-grid">
+          {render_day_cards(day_index)}
+        </div>
+      </details>
     </section>
 
     <section class="source-table">
-      <div class="toolbar">
-        <h2>Исходные решения и контрольные</h2>
-      </div>
-      <div class="table-wrap">
-        <table aria-label="Source uploads">
+      <details class="archive">
+        <summary>Исходные работы и контрольные</summary>
+        <div class="table-wrap">
+          <table aria-label="Исходные работы">
           <thead>
             <tr>
               <th>Тип</th>
@@ -701,15 +846,15 @@ def render_html() -> str:
           <tbody>
             {render_source_list(source)}
           </tbody>
-        </table>
-      </div>
+          </table>
+        </div>
+      </details>
     </section>
 
     <footer>
-      Dashboard generated from
+      Страница собрана из
       {link("data/capability_matrix.csv", "data/capability_matrix.csv")}
-      and {link("data/artifacts_manifest.csv", "data/artifacts_manifest.csv")}.
-      Large PDFs/images and the ZIP are tracked with Git LFS.
+      и {link("data/artifacts_manifest.csv", "data/artifacts_manifest.csv")}.
     </footer>
   </main>
 
