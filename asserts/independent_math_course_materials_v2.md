@@ -38,6 +38,7 @@
 | Многочлены: стандартный вид | https://interneturok.ru/h/biblioteka/algebra/7-klass/privedenie-mnogochlenov-k-standartnomu-vidu-tipovie-zadachi/1 | После одночленов |
 | Сложение и вычитание многочленов | https://interneturok.ru/h/biblioteka/algebra/7-klass/slozhenie-i-vichitanie-mnogochlenov-tipovie-zadachi/1 | Когда держатся скобки и подобные слагаемые |
 | Умножение многочлена на одночлен | https://interneturok.ru/h/biblioteka/algebra/7-klass/umnozhenie-mnogochlena-na-odnochlen-tipovie-zadachi/1 | После сложения и вычитания многочленов |
+| Умножение двучленов | https://interneturok.ru/h/biblioteka/algebra/7-klass/umnozhenie-dvuchlenov-tipovie-zadachi/1 | После устойчивого умножения многочлена на одночлен |
 | Вынесение общего множителя за скобки | https://interneturok.ru/h/biblioteka/algebra/7-klass/razlozhenie-mnogochlenov-na-mnozhiteli-vinesenie-obschego-mnozhitelya-za-skobki/1 | После устойчивого раскрытия скобок |
 | Библиотека алгебры 7 класса | https://interneturok.ru/h/biblioteka/algebra/7-klass | Для поиска соседних тем |
 
