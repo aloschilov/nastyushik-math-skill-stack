@@ -53,6 +53,7 @@ CAPABILITY_LABELS = {
     "parentheses_negative": "Скобки с минусом",
     "factor_common_monomial": "Вынесение общего множителя",
     "binomial_multiplication": "Умножение двучленов",
+    "square_of_sum": "Квадрат суммы",
     "equations_one_root": "Линейные уравнения",
     "equations_fraction_decimal_answers": "Дробные и десятичные ответы",
     "special_equations": "Особые уравнения",
@@ -66,12 +67,13 @@ CAPABILITY_LABELS = {
 
 CAPABILITY_DAY_HINTS = {
     "signed_arithmetic": [1, 2, 3, 35],
-    "like_terms_integer": [4, 5, 6],
+    "like_terms_integer": [4, 5, 6, 59, 60],
     "like_terms_decimal": [33, 34],
     "parentheses_positive": [10, 13, 36],
     "parentheses_negative": [12, 15, 37],
     "factor_common_monomial": [54, 55, 56, 57, 58],
-    "binomial_multiplication": [58],
+    "binomial_multiplication": [58, 59, 60, 61, 62, 63],
+    "square_of_sum": [62, 63],
     "equations_one_root": [10, 12, 20, 38],
     "equations_fraction_decimal_answers": [11, 14, 31],
     "special_equations": [16, 18, 23],
@@ -79,7 +81,7 @@ CAPABILITY_DAY_HINTS = {
     "negative_multiplier_inequalities": [32, 37, 39, 56, 57, 58],
     "substitution_check": [12, 20, 38],
     "word_problems_table": [12, 20, 23],
-    "variable_meaning": [12, 20, 23],
+    "variable_meaning": [12, 20, 23, 60, 61],
     "mixed_transfer": [36, 38, 39, 56, 57, 58],
 }
 
@@ -90,7 +92,8 @@ CAPABILITY_SOURCE_HINTS = {
     "parentheses_positive": ["Блок 1.", "Длок 1."],
     "parentheses_negative": ["Блак", "Длок"],
     "factor_common_monomial": ["Днек", "Длок", "Блок 2.", "Блак 1.-5"],
-    "binomial_multiplication": [],
+    "binomial_multiplication": ["1 х-х = x2", "3|3+5m+ 2m +10|= m2 + 7m +10", "Блак 1-", "1 2 152 + 0+5"],
+    "square_of_sum": ["1)a. a + a. b"],
     "equations_one_root": ["X=46", "2)(- 5)", "5.pdf"],
     "equations_fraction_decimal_answers": ["12,5 х", "1,20", "1,4 х"],
     "special_equations": ["Экзамен по математике"],
@@ -98,11 +101,12 @@ CAPABILITY_SOURCE_HINTS = {
     "negative_multiplier_inequalities": ["Экзамен по математике", "Блок", "Блак 1.-5"],
     "substitution_check": ["Экзамен по математике", "X=46"],
     "word_problems_table": ["Пусть Х", "Экзамен по математике"],
-    "variable_meaning": ["Пусть Х", "Экзамен по математике"],
+    "variable_meaning": ["Пусть Х", "Экзамен по математике", "3|3+5m+ 2m +10|= m2 + 7m +10", "Блак 1-"],
     "mixed_transfer": ["Экзамен по математике", "Блок", "Длок", "Блак 1.-5"],
 }
 
 FOCUS_ORDER = [
+    "square_of_sum",
     "binomial_multiplication",
     "negative_multiplier_inequalities",
     "simple_inequalities",
