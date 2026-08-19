@@ -273,6 +273,8 @@
       cursor: pointer;
     }
     details.archive[open] > summary { margin-bottom: 12px; }
+    mjx-container { max-width: 100%; }
+    mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; }
     @media (max-width: 880px) {
       header, main { padding-left: 16px; padding-right: 16px; }
       .stats { grid-template-columns: repeat(2, minmax(130px, 1fr)); }
@@ -314,6 +316,19 @@
       .source-table tbody td:nth-child(4)::before { content: "SHA-256"; }
     }
   </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
 </head>
 <body>
   <header>
