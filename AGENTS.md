@@ -61,3 +61,11 @@ pdftotext path/to/file.pdf - | rg '\\\\\(|\\\\\)|\\\\le|\\\\ge|\\\\Rightarrow|\\
 ```
 
 Команда не должна находить совпадений в пользовательских материалах. После этого рендерить новые PDF через `pdftoppm` и визуально проверять страницы.
+
+## Commit, push и GitHub Pages
+
+- При запросе `commit and push`, если изменения затрагивают дневные материалы, матрицы, curriculum, manifest или dashboard, перед коммитом обязательно запускать `python3 scripts/generate_dashboard.py` и включать актуальный `docs/index.html` в тот же коммит.
+- После push в `master` дождаться успешного завершения workflow `.github/workflows/pages.yml`. Сам факт успешного `git push` не означает, что публикация завершена.
+- Затем открыть и визуально проверить живой dashboard по адресу **https://aloschilov.github.io/nastyushik-math-skill-stack/** с cache-busting query-параметром. Убедиться, что на странице показан актуальный номер дня, доступны ссылки нового комплекта и формулы отрендерены.
+- Если workflow не запустился автоматически, запустить его через `workflow_dispatch`, дождаться результата и повторить проверку живой страницы.
+- Не считать запрос `commit and push` завершённым, пока `master`, успешный Pages deployment и содержимое живого dashboard не согласованы между собой.
