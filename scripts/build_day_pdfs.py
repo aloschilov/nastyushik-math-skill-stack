@@ -185,6 +185,8 @@ def manifest_category(path: Path) -> str | None:
         return "generated/feedback_child"
     if parts[:3] == ("artifacts", "generated", "feedback_parent"):
         return "generated/feedback_parent"
+    if parts[:3] == ("artifacts", "generated", "guides"):
+        return "generated/guides"
     if parts[:3] == ("artifacts", "generated", "source"):
         return "generated/source"
     return None

@@ -500,6 +500,7 @@ def render_capability_rows(
 def render_day_cards(day_index: dict[int, dict[str, list[dict[str, str]]]]) -> str:
     cards: list[str] = []
     labels = {
+        "guides": "пособие",
         "tasks": "задания",
         "answers": "ответы",
         "feedback_child": "ребёнку",
@@ -508,7 +509,7 @@ def render_day_cards(day_index: dict[int, dict[str, list[dict[str, str]]]]) -> s
     for day in sorted(day_index, reverse=True):
         bundle = day_index[day]
         file_links: list[str] = []
-        for kind in ["tasks", "answers", "feedback_child", "feedback_parent"]:
+        for kind in ["guides", "tasks", "answers", "feedback_child", "feedback_parent"]:
             for item in bundle.get(kind, [])[:2]:
                 file_links.append(link(item["final_path"], labels[kind]))
         cards.append(
@@ -527,21 +528,28 @@ def render_latest_bundle(
     if not latest_day:
         return '<span class="muted">Комплекты ещё не добавлены</span>'
     labels = {
+        "guides": "Учебное пособие",
         "tasks": "Задания ребёнку",
         "answers": "Ответы родителю",
         "feedback_child": "Обратная связь ребёнку",
         "feedback_parent": "Обратная связь родителю",
     }
     links: list[str] = []
-    for kind in ["tasks", "answers", "feedback_child", "feedback_parent"]:
-        bundle_day = latest_day if kind in {"tasks", "answers"} else latest_day - 1
+    for kind in ["guides", "tasks", "answers", "feedback_child", "feedback_parent"]:
+        bundle_day = latest_day if kind in {"guides", "tasks", "answers"} else latest_day - 1
         bundle = day_index.get(bundle_day, {})
         for item in bundle.get(kind, [])[:1]:
             links.append(link(item["final_path"], labels[kind]))
+    has_guide = bool(day_index.get(latest_day, {}).get("guides"))
+    intro = (
+        "Начните с учебного пособия, затем переходите к заданию."
+        if has_guide
+        else "Начните с задания; ответы и обратная связь находятся рядом."
+    )
     return (
         f'<div class="latest-number">День {latest_day}</div>'
         '<div class="latest-copy"><strong>Комплект готов к выдаче</strong>'
-        '<span>Начните с задания; ответы и обратная связь находятся рядом.</span></div>'
+        f"<span>{intro}</span></div>"
         f'<div class="latest-links">{" ".join(links)}</div>'
     )
 
