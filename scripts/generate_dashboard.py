@@ -147,22 +147,22 @@ CAPABILITY_DAY_HINTS = {
     "binomial_multiplication": [58, 59, 60, 61, 62, 63, 64],
     "powers_monomials": [40, 41, 42],
     "polynomial_structure_operations": [58, 59, 60, 61],
-    "square_of_sum": [62, 63, 64, 65, 66],
-    "identity_proof": [62, 63, 64, 65, 66],
-    "reasoning_generalization": [64, 65, 66],
-    "factorization_special_products": [54, 55, 62, 63, 64, 65, 66],
+    "square_of_sum": [62, 63, 64, 65, 66, 67],
+    "identity_proof": [62, 63, 64, 65, 66, 68, 69, 70, 71],
+    "reasoning_generalization": [64, 65, 66, 67, 68, 69, 70, 71],
+    "factorization_special_products": [54, 55, 62, 63, 64, 65, 66, 67, 69],
     "coordinate_intervals_distance": [],
     "function_concept_graph_analysis": [],
     "linear_function_abs_piecewise": [],
-    "divisibility_primes_criteria": [],
+    "divisibility_primes_criteria": [69, 70, 71],
     "gcd_lcm_euclid": [],
     "remainders_arithmetic": [],
     "absolute_value_equations": [],
     "linear_systems": [],
     "geometry_basic_objects": [40, 41],
-    "geometry_axiomatic_language": [65, 66],
+    "geometry_axiomatic_language": [65, 66, 72],
     "geometry_angle_measurement": [46, 47, 48, 49, 50],
-    "geometry_adjacent_vertical_angles": [46, 47, 48, 49, 50, 60, 61, 64, 65, 66],
+    "geometry_adjacent_vertical_angles": [46, 47, 48, 49, 50, 60, 61, 64, 65, 66, 72],
     "geometry_polygons_symmetry": [],
     "geometry_triangle_elements": [],
     "geometry_congruence_isosceles": [],
@@ -207,13 +207,13 @@ CAPABILITY_SOURCE_HINTS = {
     "powers_monomials": ["1 х-х = x2", "1)(2 х) (22) = 4х2"],
     "polynomial_structure_operations": ["1 х-х = x2", "3|3+5m+ 2m +10|= m2 + 7m +10"],
     "square_of_sum": ["1)a. a + a. b", "14x+4х = 8 х", "1)(2 х) (22) = 4х2", "Бижк 1.-2"],
-    "identity_proof": ["Бижк 1.-2"],
-    "reasoning_generalization": ["Бижк 1.-2"],
+    "identity_proof": ["Бижк 1.-2", "den71_reshenie_Nastyushik"],
+    "reasoning_generalization": ["Бижк 1.-2", "den71_reshenie_Nastyushik"],
     "factorization_special_products": ["Бижк 1.-2"],
     "coordinate_intervals_distance": [],
     "function_concept_graph_analysis": [],
     "linear_function_abs_piecewise": [],
-    "divisibility_primes_criteria": [],
+    "divisibility_primes_criteria": ["den71_reshenie_Nastyushik"],
     "gcd_lcm_euclid": [],
     "remainders_arithmetic": [],
     "absolute_value_equations": [],
@@ -407,7 +407,9 @@ def source_matches(source: list[dict[str, str]], capability: str) -> list[dict[s
     hints = CAPABILITY_SOURCE_HINTS.get(capability, [])
     matches: list[dict[str, str]] = []
     for item in source:
-        haystack = f"{item['original_path']} {item['archive_path']}".lower()
+        # Match the normalized repository path. The original upload name can be
+        # vague (for example, "Блок 1") and create unrelated capability links.
+        haystack = item["archive_path"].lower()
         if any(hint.lower() in haystack for hint in hints):
             matches.append(item)
     return matches[:3]
