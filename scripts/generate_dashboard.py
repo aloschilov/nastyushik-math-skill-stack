@@ -160,9 +160,9 @@ CAPABILITY_DAY_HINTS = {
     "absolute_value_equations": [],
     "linear_systems": [],
     "geometry_basic_objects": [40, 41],
-    "geometry_axiomatic_language": [65, 66, 72],
-    "geometry_angle_measurement": [46, 47, 48, 49, 50],
-    "geometry_adjacent_vertical_angles": [46, 47, 48, 49, 50, 60, 61, 64, 65, 66, 72],
+    "geometry_axiomatic_language": [65, 66, 72, 73, 74, 75],
+    "geometry_angle_measurement": [46, 47, 48, 49, 50, 73, 74, 75],
+    "geometry_adjacent_vertical_angles": [46, 47, 48, 49, 50, 60, 61, 64, 65, 66, 72, 73, 74, 75],
     "geometry_polygons_symmetry": [],
     "geometry_triangle_elements": [],
     "geometry_congruence_isosceles": [],
@@ -219,9 +219,9 @@ CAPABILITY_SOURCE_HINTS = {
     "absolute_value_equations": [],
     "linear_systems": [],
     "geometry_basic_objects": [],
-    "geometry_axiomatic_language": ["Бижк 1.-2"],
-    "geometry_angle_measurement": ["Бижк 1.-2"],
-    "geometry_adjacent_vertical_angles": ["Бижк 1.-2"],
+    "geometry_axiomatic_language": ["den72_reshenie_Nastyushik", "den73_reshenie_Nastyushik", "den74_reshenie_Nastyushik"],
+    "geometry_angle_measurement": ["den72_reshenie_Nastyushik", "den73_reshenie_Nastyushik", "den74_reshenie_Nastyushik"],
+    "geometry_adjacent_vertical_angles": ["den72_reshenie_Nastyushik", "den73_reshenie_Nastyushik", "den74_reshenie_Nastyushik"],
     "geometry_polygons_symmetry": [],
     "geometry_triangle_elements": [],
     "geometry_congruence_isosceles": [],
@@ -431,7 +431,7 @@ def capability_artifacts(
         if answer:
             day_links.append(link(answer["final_path"], f"ответы"))
     if day_links:
-        pieces.append('<div class="link-cluster">' + " ".join(day_links[:6]) + "</div>")
+        pieces.append('<div class="link-cluster">' + " ".join(day_links[-6:]) + "</div>")
 
     source_links = [
         link(item["final_path"], file_label(item["final_path"]))
