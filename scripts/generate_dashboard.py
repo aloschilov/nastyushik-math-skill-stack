@@ -160,9 +160,9 @@ CAPABILITY_DAY_HINTS = {
     "absolute_value_equations": [],
     "linear_systems": [],
     "geometry_basic_objects": [40, 41],
-    "geometry_axiomatic_language": [65, 66, 72, 73, 74, 75],
-    "geometry_angle_measurement": [46, 47, 48, 49, 50, 73, 74, 75],
-    "geometry_adjacent_vertical_angles": [46, 47, 48, 49, 50, 60, 61, 64, 65, 66, 72, 73, 74, 75],
+    "geometry_axiomatic_language": [65, 66, 72, 73, 74, 75, 76, 77, 78, 79],
+    "geometry_angle_measurement": [46, 47, 48, 49, 50, 73, 74, 75, 76, 77, 78, 79],
+    "geometry_adjacent_vertical_angles": [46, 47, 48, 49, 50, 60, 61, 64, 65, 66, 72, 73, 74, 75, 76, 77, 78, 79],
     "geometry_polygons_symmetry": [],
     "geometry_triangle_elements": [],
     "geometry_congruence_isosceles": [],
@@ -219,9 +219,9 @@ CAPABILITY_SOURCE_HINTS = {
     "absolute_value_equations": [],
     "linear_systems": [],
     "geometry_basic_objects": [],
-    "geometry_axiomatic_language": ["den72_reshenie_Nastyushik", "den73_reshenie_Nastyushik", "den74_reshenie_Nastyushik"],
-    "geometry_angle_measurement": ["den72_reshenie_Nastyushik", "den73_reshenie_Nastyushik", "den74_reshenie_Nastyushik"],
-    "geometry_adjacent_vertical_angles": ["den72_reshenie_Nastyushik", "den73_reshenie_Nastyushik", "den74_reshenie_Nastyushik"],
+    "geometry_axiomatic_language": ["den72_reshenie_Nastyushik", "den73_reshenie_Nastyushik", "den74_reshenie_Nastyushik", "den75_reshenie_Nastyushik", "den76_reshenie_Nastyushik", "den77_reshenie_Nastyushik", "den78_reshenie_Nastyushik"],
+    "geometry_angle_measurement": ["den72_reshenie_Nastyushik", "den73_reshenie_Nastyushik", "den74_reshenie_Nastyushik", "den75_reshenie_Nastyushik", "den76_reshenie_Nastyushik", "den77_reshenie_Nastyushik", "den78_reshenie_Nastyushik"],
+    "geometry_adjacent_vertical_angles": ["den72_reshenie_Nastyushik", "den73_reshenie_Nastyushik", "den74_reshenie_Nastyushik", "den75_reshenie_Nastyushik", "den76_reshenie_Nastyushik", "den77_reshenie_Nastyushik", "den78_reshenie_Nastyushik"],
     "geometry_polygons_symmetry": [],
     "geometry_triangle_elements": [],
     "geometry_congruence_isosceles": [],
@@ -406,13 +406,14 @@ def build_source_index(artifacts: list[dict[str, str]]) -> list[dict[str, str]]:
 def source_matches(source: list[dict[str, str]], capability: str) -> list[dict[str, str]]:
     hints = CAPABILITY_SOURCE_HINTS.get(capability, [])
     matches: list[dict[str, str]] = []
-    for item in source:
-        # Match the normalized repository path. The original upload name can be
-        # vague (for example, "Блок 1") and create unrelated capability links.
-        haystack = item["archive_path"].lower()
-        if any(hint.lower() in haystack for hint in hints):
-            matches.append(item)
-    return matches[:3]
+    for hint in hints:
+        for item in source:
+            # Match the normalized repository path. The original upload name can be
+            # vague (for example, "Блок 1") and create unrelated capability links.
+            haystack = item["archive_path"].lower()
+            if hint.lower() in haystack and item not in matches:
+                matches.append(item)
+    return matches[-3:]
 
 
 def capability_artifacts(
